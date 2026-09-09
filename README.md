@@ -6,7 +6,7 @@ Shareable, generalized agent skills for [opencode](https://opencode.ai).
 
 - `skills/lxc-lxd-operations`: safe LXD/LXC administration for agentic use —
   discovery-first topology mapping, approval gates for destructive/exposing
-  actions, and a reverse-proxy-first networking pattern.
+  actions, and general networking guidance.
 
 ## Install
 
@@ -40,11 +40,10 @@ own environment:
 
 To tune it for your setup:
 
-- Replace placeholders like `<proxy-container>` with your actual reverse-proxy
-  container name (e.g. `caddy`).
-- Adjust the networking layout in `reference/networking.md` if your ingress is
-  not a reverse-proxy container (e.g. bare host proxy devices, a physical NIC,
-  or a non-LXD-managed bridge).
+- Fill in any fixed facts you know (common container names, bridge subnets,
+  ingress path) so the agent does not have to rediscover them every time.
+- Adjust the networking guidance in `reference/networking.md` if your ingress is
+  a reverse proxy, bare host proxy devices, a physical NIC, or otherwise differs.
 - Adapt the `ufw` escalation examples if your host uses a different firewall
   (`firewalld`, `iptables`, nftables).
 - Tighten or loosen the approval gates in `SKILL.md` to match how much agency

@@ -13,7 +13,7 @@ lxc exec <remote:instance> -- ip route
 lxc exec <remote:instance> -- ss -lntup
 lxc exec <remote:instance> -- systemctl --failed
 lxc exec <remote:instance> -- systemctl status <service>
-lxc exec <proxy-container> -- curl -v http://<instance-ip>:<port>/
+lxc exec <peer-container> -- curl -v http://<instance-ip>:<port>/
 lxc info <remote:instance> --show-log
 ```
 
@@ -22,8 +22,8 @@ Interpret the first failing boundary:
 - No instance or stopped instance: lifecycle/state issue.
 - No address or route: profile, NIC, or bridge issue.
 - No listening socket: application or service issue.
-- Socket works locally but not from the proxy: bind address, container firewall, or bridge issue.
-- Proxy reaches the service but users cannot: reverse-proxy configuration, DNS, host firewall, or external ingress issue.
+- Socket works locally but not from a peer container: bind address, container firewall, or bridge issue.
+- Reachable on the bridge but not from outside: ingress configuration, DNS, host firewall, or external routing issue.
 
 Do not "fix" a failure by adding interfaces, proxy devices, firewall rules, or
 privileged settings without first identifying the failing boundary and obtaining

@@ -1,6 +1,6 @@
 ---
 name: lxc-lxd-operations
-description: Use when working with LXD-managed LXC containers, especially when inspecting, provisioning, debugging, networking, or operating containers across local or configured remote LXD hosts. Establish the actual remotes, default profile, bridge, and reverse-proxy topology before acting; use the existing layout; require operator approval before disruptive, destructive, externally exposing, or firewall-changing actions.
+description: Use when working with LXD-managed LXC containers, especially when inspecting, provisioning, debugging, networking, or operating containers across local or configured remote LXD hosts. Discover the actual remotes, profiles, networks, and topology before acting; use the existing layout; require operator approval before disruptive, destructive, externally exposing, or firewall-changing actions.
 ---
 
 # LXC/LXD Operations
@@ -11,14 +11,14 @@ directly.
 
 ## Operating contract
 
-Treat the local environment as an existing system, not a blank installation:
+Treat the environment as an existing system, not a blank installation:
 
-- LXD is initialized and operational.
-- The environment has a default profile with an LXD-managed bridge network.
-- A designated reverse-proxy container (commonly named `caddy` or similar) is
-  the normal HTTP/HTTPS ingress/egress path.
-- Containers sharing a bridge normally reach one another directly by container
-  IP.
+- LXD is initialized and operational, with one or more profiles and networks
+  already defined.
+- Containers are provisioned from images and configured through profiles and
+  per-instance config, not by editing LXD's internals.
+- Containers on the same LXD-managed bridge normally reach one another directly
+  by container IP.
 - Configured `lxc` remotes may represent additional LXD hosts; use explicit
   remote prefixes for consequential work.
 
@@ -49,10 +49,10 @@ lxc config show <remote:instance> --expanded
 lxc config device show <remote:instance>
 ```
 
-Record, at minimum: default remote, candidate host remotes, the default
-profile's NIC/network, bridge subnet and gateway, the reverse-proxy container's
-instance/IP, target instance/IP, service port, and whether the service is
-intended for internal, LAN, or WAN access.
+Record, at minimum: default remote, candidate host remotes, profiles in use, the
+instance's NIC and network, bridge subnet and gateway, target instance/IP,
+service port, and whether the service is intended for internal, LAN, or WAN
+access.
 
 ## Safe workflow
 
@@ -77,7 +77,7 @@ for:
 - File pushes that overwrite an existing path, or changes to production services when downtime or state loss is possible.
 - `lxc config set`, `unset`, `edit`, device add/remove/set, profile changes, storage changes, image publication, and instance creation when they alter an existing system or consume resources.
 - Host bind mounts, privileged/raw/physical devices, nesting/security changes, and broad configuration replacement.
-- LXD proxy devices, host port exposure, reverse-proxy ingress changes, WAN exposure, and any UFW/firewall command.
+- LXD proxy devices, host port exposure, ingress changes, WAN exposure, and any UFW/firewall command.
 - Copying or moving data/instances between hosts when it could expose secrets, overwrite a destination, or consume substantial storage/bandwidth.
 
 Before approved destructive work, take a named regular snapshot when practical
@@ -86,25 +86,17 @@ claim rollback safety without verifying the relevant data is included.
 
 ## Networking and web services
 
-For ordinary services use:
+Containers on the same bridge reach one another by container IP, which is
+sufficient for most internal service-to-service traffic. Discover which
+container (if any) acts as ingress before assuming a topology.
 
-```text
-LAN/WAN -> reverse-proxy container -> target-container-IP:service-port
-```
-
-First test the service from the reverse-proxy container:
-
-```bash
-lxc exec <proxy-container> -- curl -v http://<target-ip>:<port>/
-```
-
-Use an LXD `proxy` device only when the reverse-proxy container cannot handle
-the requirement or the protocol is not suitable for it. A proxy device is an
-exposure change and needs approval. If it requires host firewall changes, stop
-and escalate: the agent cannot perform or assume those host changes. Give the
-operator the concise UFW commands in `reference/networking.md`, using the actual
-discovered addresses and ports, and explain the permitted source and
-destination.
+For external HTTP/HTTPS access, the common patterns are a reverse-proxy
+container in front of the service, or an LXD `proxy` device mapping a host port
+to a container port. Either is an exposure change and needs approval. A proxy
+device may also require a host firewall rule. If it does, stop and escalate: the
+agent cannot perform or assume those host changes. Give the operator the concise
+UFW commands in `reference/networking.md`, using the actual discovered addresses
+and ports, and explain the permitted source and destination.
 
 Do not add a second NIC or expose a container directly merely to enable
 container-to-container communication. Do not treat a bridge IP as LAN-routable
@@ -132,10 +124,10 @@ JSON/YAML output to parsing human-formatted tables. See
 ## Troubleshooting order
 
 Check instance state, expanded configuration, devices, addresses/routes,
-listening sockets, service status, reverse-proxy-to-target connectivity, then
+listening sockets, service status, container-to-container reachability, then
 LXD logs. This separates a stopped service from a listening service, an internal
-routing failure, a reverse-proxy configuration problem, and an external ingress
-problem. See `reference/troubleshooting.md` for the exact sequence.
+routing failure, a configuration problem, and an external ingress problem. See
+`reference/troubleshooting.md` for the exact sequence.
 
 Official references:
 
