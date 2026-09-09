@@ -10,23 +10,15 @@ Shareable, generalized agent skills for [opencode](https://opencode.ai).
 
 ## Install
 
-One line, no clone required:
-
 ```bash
+# opencode
 bash <(curl -fsSL https://raw.githubusercontent.com/Cordtus/opencode-skills/main/install.sh)
-```
 
-Installs all packages into `~/.config/opencode/skills/`. To install to a custom
-location instead, pass it as an argument:
+# claude
+bash <(curl -fsSL https://raw.githubusercontent.com/Cordtus/opencode-skills/main/install.sh) ~/.claude/skills
 
-```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/Cordtus/opencode-skills/main/install.sh) /path/to/skills
-```
-
-Or, to install from a clone, copy the package directory directly:
-
-```bash
-cp -r skills/lxc-lxd-operations ~/.config/opencode/skills/
+# codex
+bash <(curl -fsSL https://raw.githubusercontent.com/Cordtus/opencode-skills/main/install.sh) ~/.codex/skills
 ```
 
 The package is self-contained; `SKILL.md` provides the contract and
