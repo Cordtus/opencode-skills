@@ -30,14 +30,15 @@ bash <(curl -fsSL https://raw.githubusercontent.com/Cordtus/opencode-skills/main
 
 ## Customizing
 
-The skill ships generalized: it discovers the real layout before acting and
-only assumes safe defaults. For most setups it works as-is. If you want it
-tuned to your environment, just ask your agent to do it — paste this into your
-agent:
+The skill as it exists here is generalized: it discovers the real layout before acting and
+only assumes safe defaults. 
+If you take the time to tune to your environment, it will work much better and more consistently.
+Prompt your agent to do it for you:
 
 ```text
-Read the lxc-lxd-operations skill (SKILL.md and reference/) I just installed,
-then fine-tune it to my actual environment. Discover my real LXD layout first
+Read the documentation for the recently installed lxc-lxd-operations skill
+(SKILL.md and reference/), then fine-tune it to my actual environment.
+Discover my real LXD layout first; 
 (lxc remote get-default, lxc list, lxc profile show default, lxc network list,
 lxc storage list). Update the skill so fixed facts about my setup — common
 container names, bridge/subnet details, how I expose services (reverse proxy
