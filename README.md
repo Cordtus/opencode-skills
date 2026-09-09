@@ -24,8 +24,3 @@ bash <(curl -fsSL https://raw.githubusercontent.com/Cordtus/opencode-skills/main
 The package is self-contained; `SKILL.md` provides the contract and
 `reference/` holds command and troubleshooting details.
 
-## Contributing
-
-Skills are written generic: use placeholders (`<remote:instance>`,
-`<proxy-container>`) instead of real names, and keep layout assumptions as
-discoverable defaults rather than fixed facts.
