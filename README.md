@@ -10,14 +10,21 @@ Shareable, generalized agent skills for [opencode](https://opencode.ai).
 
 ## Install
 
+**opencode**
+
 ```bash
-# opencode
 bash <(curl -fsSL https://raw.githubusercontent.com/Cordtus/opencode-skills/main/install.sh)
+```
 
-# claude
+**claude**
+
+```bash
 bash <(curl -fsSL https://raw.githubusercontent.com/Cordtus/opencode-skills/main/install.sh) ~/.claude/skills
+```
 
-# codex
+**codex**
+
+```bash
 bash <(curl -fsSL https://raw.githubusercontent.com/Cordtus/opencode-skills/main/install.sh) ~/.codex/skills
 ```
 
